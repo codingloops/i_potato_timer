@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_potato_timer/constants/string_constants.dart';
+import 'package:i_potato_timer/home/widgets/task_input_form.dart';
 import 'package:i_potato_timer/home/widgets/task_status_card.dart';
 import 'package:i_potato_timer/theme/app_color.dart';
 import 'package:i_potato_timer/theme/text_theme.dart';
@@ -35,7 +36,9 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          sampleDialog(context);
+        },
         child: Icon(
           Icons.add_circle_outline,
           color: AppColor.iconColor,
@@ -43,6 +46,18 @@ class _HomeScreenState extends State<HomeScreen> {
           weight: 0.5,
         ),
       ),
+    );
+  }
+
+  void sampleDialog(BuildContext context) {
+    showGeneralDialog(
+      context: context,
+      barrierColor: Colors.black12.withOpacity(0.6),
+      barrierDismissible: true,
+      barrierLabel: 'Dialog',
+      pageBuilder: (_, __, ___) {
+        return const TaskInputForm();
+      },
     );
   }
 }

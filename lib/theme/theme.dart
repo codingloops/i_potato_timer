@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_potato_timer/theme/app_color.dart';
 import 'package:i_potato_timer/theme/text_theme.dart';
 
@@ -20,8 +21,23 @@ abstract class AppTheme {
         appBarTheme: const AppBarTheme(
           color: AppColor.secondaryColor,
         ),
-        buttonTheme: const ButtonThemeData(
-          buttonColor: AppColor.buttonColor
-        )
+        buttonTheme: const ButtonThemeData(buttonColor: AppColor.buttonColor),
+        inputDecorationTheme: InputDecorationTheme(
+          focusedBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: AppColor.primaryColor, width: 2,),
+            borderRadius: BorderRadius.circular(4.r),
+          ),
+          labelStyle: AppTextTheme.labelSmall.copyWith(
+            color: AppColor.primaryColor,
+            fontWeight: FontWeight.w500,
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderSide: const BorderSide(color: AppColor.inactiveColor),
+            borderRadius: BorderRadius.circular(4.r),
+          ),
+          hintStyle: AppTextTheme.bodyMedium.copyWith(
+            color: AppColor.inactiveColor,
+          ),
+        ),
       );
 }

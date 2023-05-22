@@ -11,4 +11,6 @@ abstract class AppColor {
   static const iconColor = Color(0xff001F2A);
   static const buttonColor = Color(0xffE1DFFF);
   static const buttonTextColor = Color(0xff181837);
+  static const timerGreen = Color(0xff216C2E);
+  static const black = Colors.black;
 }

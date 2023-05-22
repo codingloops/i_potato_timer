@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i_potato_timer/theme/app_color.dart';
+import 'package:i_potato_timer/theme/text_theme.dart';
 
 abstract class AppTheme {
   static ThemeData appTheme() => ThemeData(
@@ -15,5 +16,7 @@ abstract class AppTheme {
           backgroundColor: AppColor.cardColor,
         ),
         disabledColor: AppColor.inactiveColor,
+        fontFamily: AppTextTheme.defaultFontFamily,
+        textTheme: AppTextTheme.defaultTextTheme(),
       );
 }

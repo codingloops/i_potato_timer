@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:i_potato_timer/home/home_screen.dart';
 import 'package:i_potato_timer/splash/widgets/app_name.dart';
 import 'package:i_potato_timer/splash/widgets/splash_logo.dart';
 
@@ -11,7 +12,26 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  
+  @override
+  void initState() {
+    super.initState();
+    _onInitialized();
+  }
+
+  Future<void> _onInitialized() async {
+    await Future.delayed(const Duration(seconds: 1));
+    navigateToHome();
+  }
+
+  void navigateToHome() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      ),
+    );
+  }
+
   List<Widget> get children => [
         const SplashLogo(),
         SizedBox(height: 57.h),

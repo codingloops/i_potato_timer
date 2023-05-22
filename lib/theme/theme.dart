@@ -8,7 +8,6 @@ abstract class AppTheme {
         secondaryHeaderColor: AppColor.secondaryColor,
         floatingActionButtonTheme: const FloatingActionButtonThemeData(
           backgroundColor: AppColor.primaryFloatingActionButton,
-          foregroundColor: AppColor.primaryFloatingActionButton,
         ),
         scaffoldBackgroundColor: AppColor.backgroundColor,
         cardColor: AppColor.cardColor,
@@ -18,5 +17,11 @@ abstract class AppTheme {
         disabledColor: AppColor.inactiveColor,
         fontFamily: AppTextTheme.defaultFontFamily,
         textTheme: AppTextTheme.defaultTextTheme(),
+        appBarTheme: const AppBarTheme(
+          color: AppColor.secondaryColor,
+        ),
+        buttonTheme: const ButtonThemeData(
+          buttonColor: AppColor.buttonColor
+        )
       );
 }

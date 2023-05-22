@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_potato_timer/constants/string_constants.dart';
@@ -9,7 +8,9 @@ import 'package:i_potato_timer/theme/text_theme.dart';
 class TaskFormContent extends StatelessWidget {
   const TaskFormContent({
     super.key,
+    required this.onDurationSelect,
   });
+  final Function(Duration) onDurationSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +64,9 @@ class TaskFormContent extends StatelessWidget {
         SizedBox(
           height: 4.h,
         ),
-        const DurationIndicator()
+        DurationIndicator(
+          onDurationSelect: onDurationSelect,
+        )
       ],
     );
   }

@@ -4,11 +4,16 @@ import 'package:i_potato_timer/home/widgets/add_task_button.dart';
 import 'package:i_potato_timer/home/widgets/task_form_content.dart';
 import 'package:i_potato_timer/utils/widget_utils.dart';
 
-class TaskInputForm extends StatelessWidget {
+class TaskInputForm extends StatefulWidget {
   const TaskInputForm({
     super.key,
   });
 
+  @override
+  State<TaskInputForm> createState() => _TaskInputFormState();
+}
+
+class _TaskInputFormState extends State<TaskInputForm> {
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -33,7 +38,11 @@ class TaskInputForm extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(left: 32.w, right: 64.w),
-          child: const TaskFormContent(),
+          child: TaskFormContent(
+            onDurationSelect: (duration) {
+              print('This is From TaskInput $duration');
+            },
+          ),
         ),
         AddTaskButton(
           onTap: () {},

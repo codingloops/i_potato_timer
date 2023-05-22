@@ -25,7 +25,7 @@ abstract class AppTheme {
         inputDecorationTheme: InputDecorationTheme(
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: AppColor.primaryColor, width: 2,),
-            borderRadius: BorderRadius.circular(4.r),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           labelStyle: AppTextTheme.labelSmall.copyWith(
             color: AppColor.primaryColor,
@@ -33,7 +33,7 @@ abstract class AppTheme {
           ),
           disabledBorder: OutlineInputBorder(
             borderSide: const BorderSide(color: AppColor.inactiveColor),
-            borderRadius: BorderRadius.circular(4.r),
+            borderRadius: BorderRadius.circular(8.r),
           ),
           hintStyle: AppTextTheme.bodyMedium.copyWith(
             color: AppColor.inactiveColor,

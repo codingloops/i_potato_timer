@@ -19,9 +19,11 @@ class ErrorPage extends StatelessWidget {
           ),
           ElevatedButton(
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(AppColor.buttonColor),
+              backgroundColor: MaterialStateProperty.all(
+                AppColor.buttonColor,
+              ),
             ),
-            onPressed: () => getIt.get<TaskStore>().getAllTasks(),
+            onPressed: onTap,
             child: Text(
               StringConstants.reloadTasks,
               style: AppTextTheme.bodyMedium.copyWith(
@@ -33,5 +35,9 @@ class ErrorPage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void onTap() {
+    getIt.get<TaskStore>().getAllTasks();
   }
 }

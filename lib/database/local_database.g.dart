@@ -46,9 +46,21 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   late final GeneratedColumn<int> pausedTime = GeneratedColumn<int>(
       'paused_time', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _completedMeta =
+      const VerificationMeta('completed');
+  @override
+  late final GeneratedColumn<bool> completed =
+      GeneratedColumn<bool>('completed', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("completed" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   @override
   List<GeneratedColumn> get $columns =>
-      [id, title, description, startTime, endTime, pausedTime];
+      [id, title, description, startTime, endTime, pausedTime, completed];
   @override
   String get aliasedName => _alias ?? 'tasks';
   @override
@@ -93,6 +105,12 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
           pausedTime.isAcceptableOrUnknown(
               data['paused_time']!, _pausedTimeMeta));
     }
+    if (data.containsKey('completed')) {
+      context.handle(_completedMeta,
+          completed.isAcceptableOrUnknown(data['completed']!, _completedMeta));
+    } else if (isInserting) {
+      context.missing(_completedMeta);
+    }
     return context;
   }
 
@@ -114,6 +132,8 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
           .read(DriftSqlType.int, data['${effectivePrefix}end_time'])!,
       pausedTime: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}paused_time']),
+      completed: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}completed'])!,
     );
   }
 
@@ -130,13 +150,15 @@ class Task extends DataClass implements Insertable<Task> {
   final int startTime;
   final int endTime;
   final int? pausedTime;
+  final bool completed;
   const Task(
       {required this.id,
       required this.title,
       required this.description,
       required this.startTime,
       required this.endTime,
-      this.pausedTime});
+      this.pausedTime,
+      required this.completed});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -148,6 +170,7 @@ class Task extends DataClass implements Insertable<Task> {
     if (!nullToAbsent || pausedTime != null) {
       map['paused_time'] = Variable<int>(pausedTime);
     }
+    map['completed'] = Variable<bool>(completed);
     return map;
   }
 
@@ -161,6 +184,7 @@ class Task extends DataClass implements Insertable<Task> {
       pausedTime: pausedTime == null && nullToAbsent
           ? const Value.absent()
           : Value(pausedTime),
+      completed: Value(completed),
     );
   }
 
@@ -174,6 +198,7 @@ class Task extends DataClass implements Insertable<Task> {
       startTime: serializer.fromJson<int>(json['startTime']),
       endTime: serializer.fromJson<int>(json['endTime']),
       pausedTime: serializer.fromJson<int?>(json['pausedTime']),
+      completed: serializer.fromJson<bool>(json['completed']),
     );
   }
   @override
@@ -186,6 +211,7 @@ class Task extends DataClass implements Insertable<Task> {
       'startTime': serializer.toJson<int>(startTime),
       'endTime': serializer.toJson<int>(endTime),
       'pausedTime': serializer.toJson<int?>(pausedTime),
+      'completed': serializer.toJson<bool>(completed),
     };
   }
 
@@ -195,7 +221,8 @@ class Task extends DataClass implements Insertable<Task> {
           String? description,
           int? startTime,
           int? endTime,
-          Value<int?> pausedTime = const Value.absent()}) =>
+          Value<int?> pausedTime = const Value.absent(),
+          bool? completed}) =>
       Task(
         id: id ?? this.id,
         title: title ?? this.title,
@@ -203,6 +230,7 @@ class Task extends DataClass implements Insertable<Task> {
         startTime: startTime ?? this.startTime,
         endTime: endTime ?? this.endTime,
         pausedTime: pausedTime.present ? pausedTime.value : this.pausedTime,
+        completed: completed ?? this.completed,
       );
   @override
   String toString() {
@@ -212,14 +240,15 @@ class Task extends DataClass implements Insertable<Task> {
           ..write('description: $description, ')
           ..write('startTime: $startTime, ')
           ..write('endTime: $endTime, ')
-          ..write('pausedTime: $pausedTime')
+          ..write('pausedTime: $pausedTime, ')
+          ..write('completed: $completed')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, title, description, startTime, endTime, pausedTime);
+  int get hashCode => Object.hash(
+      id, title, description, startTime, endTime, pausedTime, completed);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -229,7 +258,8 @@ class Task extends DataClass implements Insertable<Task> {
           other.description == this.description &&
           other.startTime == this.startTime &&
           other.endTime == this.endTime &&
-          other.pausedTime == this.pausedTime);
+          other.pausedTime == this.pausedTime &&
+          other.completed == this.completed);
 }
 
 class TasksCompanion extends UpdateCompanion<Task> {
@@ -239,6 +269,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
   final Value<int> startTime;
   final Value<int> endTime;
   final Value<int?> pausedTime;
+  final Value<bool> completed;
   const TasksCompanion({
     this.id = const Value.absent(),
     this.title = const Value.absent(),
@@ -246,6 +277,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.startTime = const Value.absent(),
     this.endTime = const Value.absent(),
     this.pausedTime = const Value.absent(),
+    this.completed = const Value.absent(),
   });
   TasksCompanion.insert({
     this.id = const Value.absent(),
@@ -254,10 +286,12 @@ class TasksCompanion extends UpdateCompanion<Task> {
     required int startTime,
     required int endTime,
     this.pausedTime = const Value.absent(),
+    required bool completed,
   })  : title = Value(title),
         description = Value(description),
         startTime = Value(startTime),
-        endTime = Value(endTime);
+        endTime = Value(endTime),
+        completed = Value(completed);
   static Insertable<Task> custom({
     Expression<int>? id,
     Expression<String>? title,
@@ -265,6 +299,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Expression<int>? startTime,
     Expression<int>? endTime,
     Expression<int>? pausedTime,
+    Expression<bool>? completed,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -273,6 +308,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
       if (startTime != null) 'start_time': startTime,
       if (endTime != null) 'end_time': endTime,
       if (pausedTime != null) 'paused_time': pausedTime,
+      if (completed != null) 'completed': completed,
     });
   }
 
@@ -282,7 +318,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
       Value<String>? description,
       Value<int>? startTime,
       Value<int>? endTime,
-      Value<int?>? pausedTime}) {
+      Value<int?>? pausedTime,
+      Value<bool>? completed}) {
     return TasksCompanion(
       id: id ?? this.id,
       title: title ?? this.title,
@@ -290,6 +327,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       pausedTime: pausedTime ?? this.pausedTime,
+      completed: completed ?? this.completed,
     );
   }
 
@@ -314,6 +352,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
     if (pausedTime.present) {
       map['paused_time'] = Variable<int>(pausedTime.value);
     }
+    if (completed.present) {
+      map['completed'] = Variable<bool>(completed.value);
+    }
     return map;
   }
 
@@ -325,7 +366,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
           ..write('description: $description, ')
           ..write('startTime: $startTime, ')
           ..write('endTime: $endTime, ')
-          ..write('pausedTime: $pausedTime')
+          ..write('pausedTime: $pausedTime, ')
+          ..write('completed: $completed')
           ..write(')'))
         .toString();
   }

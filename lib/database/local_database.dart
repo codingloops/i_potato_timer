@@ -13,6 +13,7 @@ class Tasks extends Table {
   IntColumn get startTime => integer()();
   IntColumn get endTime => integer()();
   IntColumn get pausedTime => integer().nullable()();
+  BoolColumn get completed => boolean()();
 }
 
 LazyDatabase _openConnection() {

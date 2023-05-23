@@ -30,11 +30,11 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 1;
 
-  Future<List<Task>> getEmployees() async {
+  Future<List<Task>> getTasks() async {
     return await select(tasks).get();
   }
 
-  Future<Task> getSingleEmployee(int id) async {
+  Future<Task> getSingleTask(int id) async {
     return await (select(tasks)
           ..where(
             (tbl) => tbl.id.equals(id),
@@ -42,15 +42,15 @@ class AppDatabase extends _$AppDatabase {
         .getSingle();
   }
 
-  Future<int> saveEmployee(TasksCompanion companion) async {
+  Future<int> saveTask(TasksCompanion companion) async {
     return await into(tasks).insert(companion);
   }
 
-  Future<int> deleteEmployee(int id) async {
+  Future<int> deleteTask(int id) async {
     return (delete(tasks)..where((tbl) => tbl.id.equals(id))).go();
   }
 
-  Future<bool> updateEmployee(TasksCompanion companion) async {
+  Future<bool> updateTask(TasksCompanion companion) async {
     return await update(tasks).replace(companion);
   }
 }

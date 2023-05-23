@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_potato_timer/theme/text_theme.dart';
+import 'package:i_potato_timer/presentation/theme/text_theme.dart';
 
 class CountDownTimer extends StatefulWidget {
   const CountDownTimer({

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_potato_timer/home/home_screen.dart';
-import 'package:i_potato_timer/splash/widgets/app_name.dart';
-import 'package:i_potato_timer/splash/widgets/splash_logo.dart';
+import 'package:i_potato_timer/presentation/home/home_screen.dart';
+import 'package:i_potato_timer/presentation/splash/widgets/app_name.dart';
+import 'package:i_potato_timer/presentation/splash/widgets/splash_logo.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

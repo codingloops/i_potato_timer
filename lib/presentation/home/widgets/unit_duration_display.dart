@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_potato_timer/theme/app_color.dart';
-import 'package:i_potato_timer/theme/text_theme.dart';
+import 'package:i_potato_timer/presentation/theme/app_color.dart';
+import 'package:i_potato_timer/presentation/theme/text_theme.dart';
 
 class UnitDurationDisplay extends StatelessWidget {
   const UnitDurationDisplay({

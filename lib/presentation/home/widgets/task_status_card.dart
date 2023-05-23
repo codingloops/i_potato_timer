@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:i_potato_timer/home/widgets/finished_display.dart';
-import 'package:i_potato_timer/home/widgets/task_timer.dart';
-import 'package:i_potato_timer/theme/app_color.dart';
-import 'package:i_potato_timer/theme/text_theme.dart';
+import 'package:i_potato_timer/presentation/home/widgets/finished_display.dart';
+import 'package:i_potato_timer/presentation/home/widgets/task_timer.dart';
+import 'package:i_potato_timer/presentation/theme/app_color.dart';
+import 'package:i_potato_timer/presentation/theme/text_theme.dart';
 import 'package:i_potato_timer/utils/widget_utils.dart';
 
 class TaskStatusCard extends StatelessWidget {

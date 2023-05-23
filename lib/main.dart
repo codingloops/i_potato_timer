@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_potato_timer/constants/app_constants.dart';
-import 'package:i_potato_timer/splash/splash_screen.dart';
-import 'package:i_potato_timer/theme/theme.dart';
+import 'package:i_potato_timer/presentation/splash/splash_screen.dart';
+import 'package:i_potato_timer/presentation/theme/theme.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

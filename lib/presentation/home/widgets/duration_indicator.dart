@@ -5,9 +5,9 @@ import 'package:flutter_picker/flutter_picker.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_potato_timer/constants/string_constants.dart';
 import 'package:i_potato_timer/constants/time_picker_data.dart';
-import 'package:i_potato_timer/home/widgets/colon_widget.dart';
-import 'package:i_potato_timer/home/widgets/unit_duration_display.dart';
-import 'package:i_potato_timer/theme/app_color.dart';
+import 'package:i_potato_timer/presentation/home/widgets/colon_widget.dart';
+import 'package:i_potato_timer/presentation/home/widgets/unit_duration_display.dart';
+import 'package:i_potato_timer/presentation/theme/app_color.dart';
 
 class DurationIndicator extends StatefulWidget {
   const DurationIndicator({

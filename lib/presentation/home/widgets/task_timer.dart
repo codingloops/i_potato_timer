@@ -10,12 +10,14 @@ class CountDownTimer extends StatefulWidget {
     required this.onPause,
     required this.onResume,
     required this.onStop,
+    required this.isPaused,
   });
   final VoidCallback onComplete;
   final VoidCallback onPause;
   final VoidCallback onResume;
   final VoidCallback onStop;
   final Duration duration;
+  final bool isPaused;
 
   @override
   CountDownTimerState createState() => CountDownTimerState();
@@ -30,12 +32,12 @@ class CountDownTimerState extends State<CountDownTimer>
   @override
   void initState() {
     super.initState();
-    _isPausedNotifier = ValueNotifier(false);
+    _isPausedNotifier = ValueNotifier(widget.isPaused);
     controller = AnimationController(
       vsync: this,
       duration: Duration(seconds: widget.duration.inSeconds),
     )..addStatusListener((status) {
-        if (controller.status == AnimationStatus.completed) {
+        if (controller.status == AnimationStatus.dismissed) {
           onComplete();
         }
       });
@@ -89,7 +91,7 @@ class CountDownTimerState extends State<CountDownTimer>
                 imagePath: snapshot
                     ? 'assets/images/play.png'
                     : 'assets/images/pause.png',
-                onTap: snapshot ? onPaused : onResume,
+                onTap: snapshot ? onResume : onPaused,
               );
             }),
         _TimerControlButton(

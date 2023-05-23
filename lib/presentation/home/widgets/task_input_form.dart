@@ -4,6 +4,7 @@ import 'package:i_potato_timer/presentation/home/state/task_store/task_store.dar
 import 'package:i_potato_timer/presentation/home/widgets/add_task_button.dart';
 import 'package:i_potato_timer/presentation/home/widgets/task_form_content.dart';
 import 'package:i_potato_timer/service_locator/service_locator.dart';
+import 'package:i_potato_timer/utils/duration_utils.dart';
 import 'package:i_potato_timer/utils/widget_utils.dart';
 
 class TaskInputForm extends StatefulWidget {
@@ -63,6 +64,11 @@ class _TaskInputFormState extends State<TaskInputForm> {
         ),
         AddTaskButton(
           onTap: () {
+            startTime = DurationUtils.getNowMilliSecond();
+            endTime = DurationUtils.getFinalMilliseconds(
+              DateTime.now(),
+              taskDuration,
+            );
             getIt.get<TaskStore>().saveTask(
                   title: titleController.text,
                   description: descriptionController.text,

@@ -39,7 +39,7 @@ class TaskFormContent extends StatelessWidget {
             hintText: StringConstants.hintTitle,
           ),
           textInputAction: TextInputAction.done,
-          onChanged: (text) {},
+          controller: titleController,
         ),
         SizedBox(height: 36.h),
         TextField(
@@ -51,7 +51,7 @@ class TaskFormContent extends StatelessWidget {
             hintMaxLines: 1,
           ),
           textInputAction: TextInputAction.done,
-          onChanged: (text) {},
+          controller: description,
         ),
         SizedBox(height: 30.h),
         Align(

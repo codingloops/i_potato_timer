@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) => _taskStore.state.when(
           initial: () => const InitialPage(),
           error: () => const ErrorPage(),
-          loaded: (tasks) => const TaskLoadedPage(),
+          loaded: (tasks) =>  TaskLoadedPage(taskList: tasks),
           loading: () => const CircularProgressIndicator(),
         ),
       ),

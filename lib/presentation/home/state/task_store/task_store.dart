@@ -16,17 +16,16 @@ abstract class _TaskStore with Store {
   @observable
   TasksState state = const TasksInitialState();
 
-  Future getAllTasks() async {
+  Future<void> getAllTasks() async {
     try {
       state = const TasksLoadingState();
-      await Future.delayed(const Duration(seconds: 2));
       _reloadData();
     } catch (e) {
       state = const TasksErrorState();
     }
   }
 
-  Future saveTask({
+  Future<void> saveTask({
     required String title,
     required String description,
     required int startTime,
@@ -45,22 +44,26 @@ abstract class _TaskStore with Store {
     }
   }
 
-  Future _onUpdate(TaskData taskData) async {
+  Future<void> onUpdate(TaskData taskData) async {
     try {
       await _taskRepository.updateTask(taskData);
+      print('Timer Paused ${taskData.toJson()}');
     } catch (error) {
       state = const TasksErrorState();
     }
   }
 
   @action
-  Future _reloadData() async {
+  Future<void> _reloadData() async {
     final tasks = await _taskRepository.getTasks();
     tasks.sort((task1, task2) {
       if (task2.completed) {
         return 1;
       }
       return -1;
+    });
+    tasks.forEach((element) {
+      print(element.toJson());
     });
     if (tasks.isNotEmpty) {
       state = TasksLoadedState(tasks);
@@ -69,15 +72,19 @@ abstract class _TaskStore with Store {
     }
   }
 
-  onTimerPaused(TaskData taskData) async {
-    _onUpdate(taskData);
+  Future<TaskData> getSingleTask(int id) async {
+   return await _taskRepository.getSingleTask(id);
   }
 
-  onTimerResumed(TaskData taskData) async {
-    _onUpdate(taskData);
+  Future<void> onTimerPaused(TaskData taskData) async {
+    onUpdate(taskData);
   }
 
-  onTaskDelete(TaskData taskData) async {
+  Future<void> onTimerResumed(TaskData taskData) async {
+    onUpdate(taskData);
+  }
+
+  Future<void> onTaskDelete(TaskData taskData) async {
     try {
       await _taskRepository.deleteTask(taskData.id);
       _reloadData();
@@ -86,7 +93,7 @@ abstract class _TaskStore with Store {
     }
   }
 
-  onComplete(TaskData taskData) async {
+  Future<void> onComplete(TaskData taskData) async {
     try {
       final completedTask = taskData.copyWith(completed: true);
       await _taskRepository.updateTask(TaskData.fromTask(completedTask));

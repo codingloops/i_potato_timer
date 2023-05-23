@@ -12,4 +12,8 @@ abstract class StringConstants {
   static const mm = 'MM';
   static const ss = 'SS';
   static const colon = ':';
+  static const initialMessage =
+      '''No timers active.\nPress here to start a new one''';
+  static const somethingWentWrong = 'Something Went Wrong';
+  static const reloadTasks = 'Reload ?';
 }

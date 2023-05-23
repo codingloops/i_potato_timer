@@ -24,12 +24,12 @@ mixin _$TaskStore on _TaskStore, Store {
     });
   }
 
-  late final _$reloadDataAsyncAction =
-      AsyncAction('_TaskStore.reloadData', context: context);
+  late final _$_reloadDataAsyncAction =
+      AsyncAction('_TaskStore._reloadData', context: context);
 
   @override
-  Future<dynamic> reloadData() {
-    return _$reloadDataAsyncAction.run(() => super.reloadData());
+  Future<dynamic> _reloadData() {
+    return _$_reloadDataAsyncAction.run(() => super._reloadData());
   }
 
   @override

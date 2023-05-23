@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_potato_timer/constants/string_constants.dart';
-import 'package:i_potato_timer/presentation/home/widgets/task_input_form.dart';
-import 'package:i_potato_timer/presentation/home/widgets/task_status_card.dart';
-import 'package:i_potato_timer/presentation/theme/app_color.dart';
+import 'package:i_potato_timer/presentation/home/pages/error_page.dart';
+import 'package:i_potato_timer/presentation/home/pages/initial_page.dart';
+import 'package:i_potato_timer/presentation/home/pages/task_loaded_page.dart';
+import 'package:i_potato_timer/presentation/home/state/task_store/task_store.dart';
+import 'package:i_potato_timer/presentation/home/widgets/floating_add_task_button.dart';
 import 'package:i_potato_timer/presentation/theme/text_theme.dart';
+import 'package:i_potato_timer/service_locator/service_locator.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,50 +18,48 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late TaskStore _taskStore;
+
+  @override
+  void initState() {
+    super.initState();
+    _taskStore = getIt.get<TaskStore>();
+    _taskStore.getAllTasks();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        centerTitle: false,
-        title: Text(
-          StringConstants.potatoTimer,
-          style: AppTextTheme.headlineMedium,
-        ),
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 24.w),
-        child: ListView(
-          children: const [
-            TaskStatusCard(),
-            TaskStatusCard(),
-            TaskStatusCard(),
-            TaskStatusCard(),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          sampleDialog(context);
-        },
-        child: Icon(
-          Icons.add_circle_outline,
-          color: AppColor.iconColor,
-          size: 35.w,
-          weight: 0.5,
+      appBar: _buildAppBar(),
+      body: _buildBody(),
+      floatingActionButton: _buildFloatingActionButton(),
+    );
+  }
+
+  FloatingAddTaskButton _buildFloatingActionButton() =>
+      const FloatingAddTaskButton();
+
+  Padding _buildBody() {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: Observer(
+        builder: (context) => _taskStore.state.when(
+          initial: () => const InitialPage(),
+          error: () => const ErrorPage(),
+          loaded: (tasks) => const TaskLoadedPage(),
+          loading: () => const CircularProgressIndicator(),
         ),
       ),
     );
   }
 
-  void sampleDialog(BuildContext context) {
-    showGeneralDialog(
-      context: context,
-      barrierColor: Colors.black12.withOpacity(0.6),
-      barrierDismissible: true,
-      barrierLabel: 'Dialog',
-      pageBuilder: (_, __, ___) {
-        return const TaskInputForm();
-      },
+  AppBar _buildAppBar() {
+    return AppBar(
+      centerTitle: false,
+      title: Text(
+        StringConstants.potatoTimer,
+        style: AppTextTheme.headlineMedium,
+      ),
     );
   }
 }

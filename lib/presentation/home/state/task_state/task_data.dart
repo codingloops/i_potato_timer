@@ -19,5 +19,5 @@ class TaskData extends Task {
         endTime: task.endTime,
         pausedTime: task.pausedTime,
         completed: task.completed,
-      );
+      );    
 }

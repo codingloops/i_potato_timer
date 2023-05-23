@@ -19,7 +19,8 @@ abstract class _TaskStore with Store {
   Future getAllTasks() async {
     try {
       state = const TasksLoadingState();
-      reloadData();
+      await Future.delayed(const Duration(seconds: 2));
+      _reloadData();
     } catch (e) {
       state = const TasksErrorState();
     }
@@ -28,14 +29,22 @@ abstract class _TaskStore with Store {
   Future saveTask(TaskData taskData) async {
     try {
       await _taskRepository.saveTask(taskData);
-      reloadData();
+      _reloadData();
     } catch (e) {
       state = const TasksErrorState();
     }
   }
 
+  Future _onUpdate(TaskData taskData) async {
+    try {
+      await _taskRepository.updateTask(taskData);
+    } catch (error) {
+      state = const TasksErrorState();
+    }
+  }
+
   @action
-  Future reloadData() async {
+  Future _reloadData() async {
     final tasks = await _taskRepository.getTasks();
     tasks.sort((task1, task2) {
       if (task2.completed) {
@@ -45,23 +54,35 @@ abstract class _TaskStore with Store {
     });
     if (tasks.isNotEmpty) {
       state = TasksLoadedState(tasks);
+    } else {
+      state = const TasksInitialState();
     }
   }
 
   onTimerPaused(TaskData taskData) async {
-    await _taskRepository.updateTask(taskData);
+    _onUpdate(taskData);
   }
 
   onTimerResumed(TaskData taskData) async {
-    await _taskRepository.updateTask(taskData);
+    _onUpdate(taskData);
   }
 
   onTaskDelete(TaskData taskData) async {
-    await _taskRepository.deleteTask(taskData.id);
-    reloadData();
+    try {
+      await _taskRepository.deleteTask(taskData.id);
+      _reloadData();
+    } catch (error) {
+      state = const TasksErrorState();
+    }
   }
 
-  onComplete() {
-    reloadData();
+  onComplete(TaskData taskData) async {
+    try {
+      final completedTask = taskData.copyWith(completed: true);
+      await _taskRepository.updateTask(TaskData.fromTask(completedTask));
+    } catch (e) {
+      state = const TasksErrorState();
+    }
+    _reloadData();
   }
 }

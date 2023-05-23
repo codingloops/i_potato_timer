@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart';
 import 'package:i_potato_timer/database/local_database.dart';
 import 'package:i_potato_timer/presentation/home/state/task_state/task_data.dart';
 
@@ -19,8 +20,23 @@ class TaskRepository {
     return TaskData.fromTask(task);
   }
 
-  Future<int> saveTask(TaskData taskData) async {
-    return localDatabase.saveTask(taskData.toCompanion(true));
+  Future<int> saveTask({
+    required String title,
+    required String description,
+    required int startTime,
+    required int endTime,
+  }) async {
+    return localDatabase.saveTask(
+      TasksCompanion(
+        id: const Value.absent(),
+        title: Value(title),
+        description: Value(description),
+        startTime: Value(startTime),
+        endTime: Value(endTime),
+        pausedTime: const Value.absent(),
+        completed: const Value(false),
+      ),
+    );
   }
 
   Future<int> deleteTask(int id) async {

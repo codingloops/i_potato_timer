@@ -9,8 +9,12 @@ class TaskFormContent extends StatelessWidget {
   const TaskFormContent({
     super.key,
     required this.onDurationSelect,
+    required this.titleController,
+    required this.description,
   });
   final Function(Duration) onDurationSelect;
+  final TextEditingController titleController;
+  final TextEditingController description;
 
   @override
   Widget build(BuildContext context) {

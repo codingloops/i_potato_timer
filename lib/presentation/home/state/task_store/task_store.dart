@@ -26,9 +26,19 @@ abstract class _TaskStore with Store {
     }
   }
 
-  Future saveTask(TaskData taskData) async {
+  Future saveTask({
+    required String title,
+    required String description,
+    required int startTime,
+    required int endTime,
+  }) async {
     try {
-      await _taskRepository.saveTask(taskData);
+      await _taskRepository.saveTask(
+        title: title,
+        description: description,
+        startTime: startTime,
+        endTime: endTime,
+      );
       _reloadData();
     } catch (e) {
       state = const TasksErrorState();

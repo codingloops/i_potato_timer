@@ -31,6 +31,7 @@ class _TaskStatusCardState extends State<TaskStatusCard> {
   void initState() {
     super.initState();
     _taskData = widget.taskData;
+    _duration = getStartDuration();
   }
 
   bool isCompleted() {
@@ -44,118 +45,82 @@ class _TaskStatusCardState extends State<TaskStatusCard> {
       shape: RoundedRectangleBorder(
         borderRadius: WidgetUtils.getBorderRadius(),
       ),
-      child: FutureBuilder<bool>(
-          future: setTimer(),
-          builder: (context, snaphot) {
-            if (snaphot.data == true) {
-              return Column(
-                children: [
-                  Container(
-                    width: double.infinity,
-                    padding:
-                        EdgeInsets.only(left: 32.w, right: 32.w, top: 32.h),
-                    child: Column(
-                      children: [
-                        isCompleted()
-                            ? const FinishedDisplay()
-                            : Align(
-                                alignment: Alignment.centerRight,
-                                child: CountDownTimer(
-                                  key: UniqueKey(),
-                                  isPaused: _taskData.pausedTime != null,
-                                  duration: _duration,
-                                  onComplete: onComplete,
-                                  onPause: onPause,
-                                  onResume: onResume,
-                                  onStop: onStop,
-                                ),
-                              ),
-                        SizedBox(height: 10.h),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            _taskData.title,
-                            style: AppTextTheme.headlineMedium.copyWith(
-                              fontSize: 22,
-                              color: AppColor.secondaryColor,
-                            ),
-                          ),
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(left: 32.w, right: 32.w, top: 32.h),
+            child: Column(
+              children: [
+                isCompleted()
+                    ? const FinishedDisplay()
+                    : Align(
+                        alignment: Alignment.centerRight,
+                        child: CountDownTimer(
+                          key: UniqueKey(),
+                          isPaused: _taskData.pausedTime != null,
+                          duration: _duration,
+                          onComplete: onComplete,
+                          onPause: onPause,
+                          onResume: onResume,
+                          onStop: onStop,
                         ),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            _taskData.description,
-                            style: AppTextTheme.bodySmall.copyWith(
-                              color: AppColor.primaryColor,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10.h),
-                      ],
+                      ),
+                SizedBox(height: 10.h),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    _taskData.title,
+                    style: AppTextTheme.headlineMedium.copyWith(
+                      fontSize: 22,
+                      color: AppColor.secondaryColor,
                     ),
                   ),
-                  isCompleted()
-                      ? MarkCompleteButton(
-                          onTap: () {
-                            onStop();
-                          },
-                        )
-                      : SizedBox(
-                          height: 32.w,
-                        )
-                ],
-              );
-            } else {
-              return SizedBox(height: 200.h);
-            }
-          }),
+                ),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    _taskData.description,
+                    style: AppTextTheme.bodySmall.copyWith(
+                      color: AppColor.primaryColor,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10.h),
+              ],
+            ),
+          ),
+          isCompleted()
+              ? MarkCompleteButton(
+                  onTap: () {
+                    onStop();
+                  },
+                )
+              : SizedBox(
+                  height: 32.w,
+                )
+        ],
+      ),
     );
-  }
-
-  Future<bool> setTimer() async {
-    _taskData = await getIt.get<TaskStore>().getSingleTask(_taskData.id);
-    final now = DateTime.now();
-    final pausedTime = _taskData.pausedTime;
-    final timeEnd = _taskData.endTime;
-
-    /// Pause is not null means we resume
-    if (pausedTime != null) {
-      final resumeTime = now;
-      final getDurationRemaining = DurationUtils.getTimerDurationFromStartToEnd(
-        startTimeEpoch: pausedTime,
-        endTimeEpoch: timeEnd,
-      );
-      final newEndTime = resumeTime.add(getDurationRemaining);
-      final newStartTime = DateTime.now();
-
-      final task = TaskData(
-        id: _taskData.id,
-        title: _taskData.title,
-        description: _taskData.description,
-        startTime: newStartTime.millisecondsSinceEpoch,
-        endTime: newEndTime.millisecondsSinceEpoch,
-        pausedTime: null,
-        completed: _taskData.completed,
-      );
-      getIt.get<TaskStore>().onUpdate(task);
-      final newDuration = DurationUtils.getTimerDurationFromStartToEnd(
-        startTimeEpoch: newStartTime.millisecondsSinceEpoch,
-        endTimeEpoch: newEndTime.millisecondsSinceEpoch,
-      );
-      _duration = newDuration;
-      return Future.value(true);
-    }
-    final duration = DurationUtils.getTimerDurationFromStartToEnd(
-      startTimeEpoch: now.millisecondsSinceEpoch,
-      endTimeEpoch: timeEnd,
-    );
-    _duration = duration;
-    return Future.value(true);
   }
 
   void onComplete() {
     final task = TaskData.fromTask(_taskData.copyWith(completed: true));
     getIt.get<TaskStore>().onComplete(task);
+  }
+
+  Duration getStartDuration() {
+    if (_taskData.pausedTime != null) {
+      return DurationUtils.getTimerDurationFromStartToEnd(
+        startTimeEpoch: _taskData.pausedTime!,
+        endTimeEpoch: _taskData.endTime,
+      );
+    } else {
+      return DurationUtils.getTimerDurationFromStartToEnd(
+        startTimeEpoch: DurationUtils.getNowMilliSecond(),
+        endTimeEpoch: _taskData.endTime,
+      );
+    }
   }
 
   void onPause() {
@@ -173,7 +138,28 @@ class _TaskStatusCardState extends State<TaskStatusCard> {
   }
 
   void onResume() {
-    setTimer();
+    print('Is TIMER PAUSED ${_taskData.pausedTime != null}');
+    if (_taskData.pausedTime != null) {
+      final resumeTime = DateTime.now();
+      final getDurationRemaining = DurationUtils.getTimerDurationFromStartToEnd(
+        startTimeEpoch: _taskData.pausedTime!,
+        endTimeEpoch: _taskData.endTime,
+      );
+      final newEndTime = resumeTime.add(getDurationRemaining);
+      final newStartTime = DurationUtils.getNowMilliSecond();
+
+      final task = TaskData(
+        id: _taskData.id,
+        title: _taskData.title,
+        description: _taskData.description,
+        startTime: newStartTime,
+        endTime: newEndTime.millisecondsSinceEpoch,
+        pausedTime: null,
+        completed: _taskData.completed,
+      );
+      print('<== OBJECT ON Resume ==> $task');
+      getIt.get<TaskStore>().onUpdate(task);
+    }
   }
 
   void onStop() {

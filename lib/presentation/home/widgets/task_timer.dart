@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:i_potato_timer/presentation/theme/text_theme.dart';
+import 'package:i_potato_timer/utils/widget_utils.dart';
 
 class CountDownTimer extends StatefulWidget {
   const CountDownTimer({
@@ -82,7 +83,17 @@ class CountDownTimerState extends State<CountDownTimer>
       mainAxisAlignment: MainAxisAlignment.end,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        TimeDisplay(controller),
+        ValueListenableBuilder(
+          valueListenable: _isPausedNotifier,
+          builder: (context, isPaused, _) {
+            return isPaused
+                ? Text(
+                    WidgetUtils.timerString(controller),
+                    style: AppTextTheme.headlineMedium,
+                  )
+                : TimeDisplay(controller);
+          },
+        ),
         SizedBox(width: 4.w),
         ValueListenableBuilder<bool>(
             valueListenable: _isPausedNotifier,
@@ -114,18 +125,13 @@ class TimeDisplay extends StatelessWidget {
 
   final AnimationController controller;
 
-  String get timerString {
-    final duration = controller.duration! * controller.value;
-    return '''${(duration.inHours % 60).toString().padLeft(2, '0')}:${(duration.inMinutes % 60).toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}''';
-  }
-
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: controller,
       builder: (context, _) {
         return Text(
-          timerString,
+          WidgetUtils.timerString(controller),
           style: AppTextTheme.headlineMedium,
         );
       },

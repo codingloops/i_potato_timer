@@ -47,7 +47,6 @@ abstract class _TaskStore with Store {
   Future<void> onUpdate(TaskData taskData) async {
     try {
       await _taskRepository.updateTask(taskData);
-      print('Timer Paused ${taskData.toJson()}');
     } catch (error) {
       state = const TasksErrorState();
     }
@@ -73,7 +72,7 @@ abstract class _TaskStore with Store {
   }
 
   Future<TaskData> getSingleTask(int id) async {
-   return await _taskRepository.getSingleTask(id);
+    return await _taskRepository.getSingleTask(id);
   }
 
   Future<void> onTimerPaused(TaskData taskData) async {

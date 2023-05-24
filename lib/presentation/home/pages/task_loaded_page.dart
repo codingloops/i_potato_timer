@@ -17,7 +17,7 @@ class TaskLoadedPage extends StatelessWidget {
       itemCount: taskList.length,
       itemBuilder: (context, index) {
         return TaskStatusCard(
-          key: Key(index.toString()),
+          key: Key(taskList[index].id.toString()),
           taskData: taskList[index],
         );
       },

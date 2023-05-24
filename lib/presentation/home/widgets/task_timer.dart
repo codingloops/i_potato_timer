@@ -29,10 +29,12 @@ class CountDownTimerState extends State<CountDownTimer>
   late AnimationController controller;
 
   late ValueNotifier<bool> _isPausedNotifier;
+  late Duration duration;
 
   @override
   void initState() {
     super.initState();
+    duration = widget.duration;
     _isPausedNotifier = ValueNotifier(widget.isPaused);
     controller = AnimationController(
       vsync: this,
@@ -53,24 +55,17 @@ class CountDownTimerState extends State<CountDownTimer>
     );
   }
 
-  void handlePauseToggle() {
-    if (_isPausedNotifier.value) {
-      startTimer();
-      _isPausedNotifier.value = false;
-    } else {
-      controller.stop();
-      _isPausedNotifier.value = true;
-    }
-  }
-
   void onPaused() {
     widget.onPause.call();
-    handlePauseToggle();
+    controller.stop();
+    _isPausedNotifier.value = true;
   }
 
   void onResume() {
     widget.onResume.call();
-    handlePauseToggle();
+    duration = controller.duration! * controller.value;
+    startTimer();
+    _isPausedNotifier.value = false;
   }
 
   void onComplete() {
@@ -88,7 +83,7 @@ class CountDownTimerState extends State<CountDownTimer>
           builder: (context, isPaused, _) {
             return isPaused
                 ? Text(
-                    WidgetUtils.timerString(controller),
+                    WidgetUtils.timerString(duration),
                     style: AppTextTheme.headlineMedium,
                   )
                 : TimeDisplay(controller);
@@ -97,12 +92,12 @@ class CountDownTimerState extends State<CountDownTimer>
         SizedBox(width: 4.w),
         ValueListenableBuilder<bool>(
             valueListenable: _isPausedNotifier,
-            builder: (context, snapshot, _) {
+            builder: (context, isPaused, _) {
               return _TimerControlButton(
-                imagePath: snapshot
+                imagePath: isPaused
                     ? 'assets/images/play.png'
                     : 'assets/images/pause.png',
-                onTap: snapshot ? onResume : onPaused,
+                onTap: isPaused ? onResume : onPaused,
               );
             }),
         _TimerControlButton(
@@ -116,6 +111,7 @@ class CountDownTimerState extends State<CountDownTimer>
   @override
   void dispose() {
     controller.dispose();
+    _isPausedNotifier.dispose();
     super.dispose();
   }
 }
@@ -131,7 +127,7 @@ class TimeDisplay extends StatelessWidget {
       animation: controller,
       builder: (context, _) {
         return Text(
-          WidgetUtils.timerString(controller),
+          WidgetUtils.timerString(controller.duration! * controller.value),
           style: AppTextTheme.headlineMedium,
         );
       },

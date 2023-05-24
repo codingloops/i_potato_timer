@@ -46,10 +46,11 @@ abstract class _TaskStore with Store {
 
   Future<void> onUpdate(TaskData taskData) async {
     try {
-      await _taskRepository.updateTask(taskData);
+      await _taskRepository.updateTask(taskData); 
     } catch (error) {
       state = const TasksErrorState();
     }
+    _reloadData();
   }
 
   @action
@@ -60,9 +61,6 @@ abstract class _TaskStore with Store {
         return 1;
       }
       return -1;
-    });
-    tasks.forEach((element) {
-      print(element.toJson());
     });
     if (tasks.isNotEmpty) {
       state = TasksLoadedState(tasks);

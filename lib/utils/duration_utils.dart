@@ -20,12 +20,4 @@ class DurationUtils {
     final timerDuration = Duration(milliseconds: timeElapsed);
     return timerDuration;
   }
-
-  static DateTime getDateFromMillisecondsFromEpoch(int milliseconds) {
-    return DateTime.fromMillisecondsSinceEpoch(milliseconds);
-  }
-
-  static int getMillisecondsFromDate(DateTime dateTime) {
-    return dateTime.millisecondsSinceEpoch;
-  }
 }

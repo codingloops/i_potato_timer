@@ -15,8 +15,7 @@ class WidgetUtils {
     );
   }
 
-  static String timerString(AnimationController controller) {
-    final duration = controller.duration! * controller.value;
+  static String timerString(Duration duration) {
     return '''${(duration.inHours % 60).toString().padLeft(2, '0')}:${(duration.inMinutes % 60).toString().padLeft(2, '0')}:${(duration.inSeconds % 60).toString().padLeft(2, '0')}''';
   }
 }

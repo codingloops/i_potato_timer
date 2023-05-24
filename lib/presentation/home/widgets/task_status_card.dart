@@ -57,7 +57,6 @@ class _TaskStatusCardState extends State<TaskStatusCard> {
                     : Align(
                         alignment: Alignment.centerRight,
                         child: CountDownTimer(
-                          key: UniqueKey(),
                           isPaused: _taskData.pausedTime != null,
                           duration: _duration,
                           onComplete: onComplete,
@@ -111,19 +110,21 @@ class _TaskStatusCardState extends State<TaskStatusCard> {
 
   Duration getStartDuration() {
     if (_taskData.pausedTime != null) {
-      return DurationUtils.getTimerDurationFromStartToEnd(
+      final duration = DurationUtils.getTimerDurationFromStartToEnd(
         startTimeEpoch: _taskData.pausedTime!,
         endTimeEpoch: _taskData.endTime,
       );
+      return duration;
     } else {
-      return DurationUtils.getTimerDurationFromStartToEnd(
+      final duration = DurationUtils.getTimerDurationFromStartToEnd(
         startTimeEpoch: DurationUtils.getNowMilliSecond(),
         endTimeEpoch: _taskData.endTime,
       );
+      return duration;
     }
   }
 
-  void onPause() {
+  void onPause() async {
     final task = TaskData(
       id: _taskData.id,
       title: _taskData.title,
@@ -133,12 +134,10 @@ class _TaskStatusCardState extends State<TaskStatusCard> {
       pausedTime: DurationUtils.getNowMilliSecond(),
       completed: _taskData.completed,
     );
-    print('<== OBJECT ON PAUSE ==> $task');
     getIt.get<TaskStore>().onTimerPaused(task);
   }
 
-  void onResume() {
-    print('Is TIMER PAUSED ${_taskData.pausedTime != null}');
+  void onResume() async {
     if (_taskData.pausedTime != null) {
       final resumeTime = DateTime.now();
       final getDurationRemaining = DurationUtils.getTimerDurationFromStartToEnd(
@@ -157,8 +156,7 @@ class _TaskStatusCardState extends State<TaskStatusCard> {
         pausedTime: null,
         completed: _taskData.completed,
       );
-      print('<== OBJECT ON Resume ==> $task');
-      getIt.get<TaskStore>().onUpdate(task);
+      getIt.get<TaskStore>().onTimerResumed(task);
     }
   }
 

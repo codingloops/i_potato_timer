@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:i_potato_timer/constants/app_constants.dart';
 import 'package:i_potato_timer/presentation/theme/app_color.dart';

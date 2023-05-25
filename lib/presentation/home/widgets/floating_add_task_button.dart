@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +5,6 @@ import 'package:i_potato_timer/presentation/home/state/task_store/task_store.dar
 import 'package:i_potato_timer/presentation/home/widgets/task_input_form.dart';
 import 'package:i_potato_timer/presentation/theme/app_color.dart';
 import 'package:i_potato_timer/service_locator/service_locator.dart';
-
 
 class FloatingAddTaskButton extends StatelessWidget {
   const FloatingAddTaskButton({
@@ -43,7 +41,7 @@ class FloatingAddTaskButton extends StatelessWidget {
     showGeneralDialog(
       context: context,
       barrierColor: AppColor.black.withOpacity(0.7),
-      barrierDismissible: true,
+      barrierDismissible: false,
       barrierLabel: 'Dialog',
       pageBuilder: (_, __, ___) {
         return const TaskInputForm();

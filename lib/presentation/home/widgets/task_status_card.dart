@@ -45,66 +45,78 @@ class _TaskStatusCardState extends State<TaskStatusCard> {
       shape: RoundedRectangleBorder(
         borderRadius: WidgetUtils.getBorderRadius(),
       ),
-      child: Column(
-        children: [
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.only(left: 32.w, right: 32.w, top: 32.h),
-            child: Column(
-              children: [
-                isCompleted()
-                    ? const FinishedDisplay()
-                    : Align(
-                        alignment: Alignment.centerRight,
-                        child: CountDownTimer(
-                          isPaused: _taskData.pausedTime != null,
-                          duration: _duration,
-                          onComplete: onComplete,
-                          onPause: onPause,
-                          onResume: onResume,
-                          onStop: onStop,
-                        ),
-                      ),
-                SizedBox(height: 10.h),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    _taskData.title,
-                    style: AppTextTheme.headlineMedium.copyWith(
-                      fontSize: 22,
-                      color: AppColor.secondaryColor,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    _taskData.description,
-                    style: AppTextTheme.bodySmall.copyWith(
-                      color: AppColor.primaryColor,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 10.h),
-              ],
-            ),
+      child: _buildCardBody(),
+    );
+  }
+
+  Column _buildCardBody() {
+    return Column(
+      children: [
+        Container(
+          width: double.infinity,
+          padding: EdgeInsets.only(
+            left: 32.w,
+            right: 32.w,
+            top: 32.h,
           ),
-          isCompleted()
-              ? MarkCompleteButton(
-                  onTap: () {
-                    onStop();
-                  },
-                )
-              : SizedBox(
-                  height: 32.w,
-                )
-        ],
-      ),
+          child: Column(
+            children: [
+              isCompleted()
+                  ? const FinishedDisplay()
+                  : Align(
+                      alignment: Alignment.centerRight,
+                      child: CountDownTimer(
+                        isPaused: _taskData.pausedTime != null,
+                        duration: _duration,
+                        onComplete: onComplete,
+                        onPause: onPause,
+                        onResume: onResume,
+                        onStop: onStop,
+                      ),
+                    ),
+              SizedBox(height: 10.h),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _taskData.title,
+                  style: AppTextTheme.headlineMedium.copyWith(
+                    fontSize: 22,
+                    color: AppColor.secondaryColor,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  _taskData.description,
+                  style: AppTextTheme.bodySmall.copyWith(
+                    color: AppColor.primaryColor,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10.h),
+            ],
+          ),
+        ),
+        isCompleted()
+            ? MarkCompleteButton(
+                onTap: () {
+                  onStop();
+                },
+              )
+            : SizedBox(
+                height: 32.w,
+              )
+      ],
     );
   }
 
   void onComplete() {
-    final task = TaskData.fromTask(_taskData.copyWith(completed: true));
+    final task = TaskData.fromTask(
+      _taskData.copyWith(
+        completed: true,
+      ),
+    );
     getIt.get<TaskStore>().onComplete(task);
   }
 

@@ -12,5 +12,4 @@ class AppAudioPalyer {
   static void stopAudio() {
     player.stop();
   }
-
 }

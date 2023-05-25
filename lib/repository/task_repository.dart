@@ -44,6 +44,10 @@ class TaskRepository {
   }
 
   Future<bool> updateTask(TaskData taskData) async {
-    return localDatabase.updateTask(taskData.toCompanion(false));
+    return localDatabase.updateTask(
+      taskData.toCompanion(
+        false,
+      ),
+    );
   }
 }

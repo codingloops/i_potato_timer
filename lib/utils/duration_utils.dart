@@ -1,5 +1,4 @@
 class DurationUtils {
-
   static int getNowMilliSecond() {
     return DateTime.now().millisecondsSinceEpoch;
   }

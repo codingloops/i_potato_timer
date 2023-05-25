@@ -107,11 +107,11 @@ abstract class _TaskStore with Store {
     _reloadData();
   }
 
-  void handleAudio(){
-    if(completedTask.isNotEmpty){
+  void handleAudio() {
+    if (completedTask.isNotEmpty) {
       AppAudioPalyer.playAudio();
     }
-    if(completedTask.isEmpty){
+    if (completedTask.isEmpty) {
       AppAudioPalyer.stopAudio();
     }
   }

@@ -24,7 +24,10 @@ abstract class AppTheme {
         buttonTheme: const ButtonThemeData(buttonColor: AppColor.buttonColor),
         inputDecorationTheme: InputDecorationTheme(
           focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(color: AppColor.primaryColor, width: 2,),
+            borderSide: const BorderSide(
+              color: AppColor.primaryColor,
+              width: 2,
+            ),
             borderRadius: BorderRadius.circular(8.r),
           ),
           labelStyle: AppTextTheme.labelSmall.copyWith(

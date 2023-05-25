@@ -42,12 +42,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Padding _buildBody() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.w),
-      child: Observer(
-        builder: (context) => _taskStore.state.when(
-          initial: () => const InitialPage(),
-          error: () => const ErrorPage(),
-          loaded: (tasks) => TaskLoadedPage(taskList: tasks),
-          loading: () => const CircularProgressIndicator(),
+      child: _buildObserver(),
+    );
+  }
+
+  Observer _buildObserver() {
+    return Observer(
+      builder: (context) => _taskStore.state.when(
+        initial: () => const InitialPage(),
+        error: () => const ErrorPage(),
+        loaded: (tasks) => TaskLoadedPage(taskList: tasks),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
         ),
       ),
     );

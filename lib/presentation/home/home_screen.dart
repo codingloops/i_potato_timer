@@ -9,6 +9,7 @@ import 'package:i_potato_timer/presentation/home/state/task_store/task_store.dar
 import 'package:i_potato_timer/presentation/home/widgets/floating_add_task_button.dart';
 import 'package:i_potato_timer/presentation/theme/text_theme.dart';
 import 'package:i_potato_timer/service_locator/service_locator.dart';
+import 'package:i_potato_timer/utils/audio_player.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) => _taskStore.state.when(
           initial: () => const InitialPage(),
           error: () => const ErrorPage(),
-          loaded: (tasks) =>  TaskLoadedPage(taskList: tasks),
+          loaded: (tasks) => TaskLoadedPage(taskList: tasks),
           loading: () => const CircularProgressIndicator(),
         ),
       ),
@@ -61,5 +62,10 @@ class _HomeScreenState extends State<HomeScreen> {
         style: AppTextTheme.headlineMedium,
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }

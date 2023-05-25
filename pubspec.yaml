@@ -48,6 +48,7 @@ dependencies:
   mobx: ^2.2.0
   flutter_mobx: ^2.0.6+5
   get_it: ^7.6.0
+  audioplayers: ^4.0.1
 
 dev_dependencies:
   flutter_test:
@@ -77,6 +78,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/sound/
 
   fonts:
     - family: Roboto

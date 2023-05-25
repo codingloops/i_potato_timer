@@ -1,6 +1,7 @@
 import 'package:i_potato_timer/presentation/home/state/task_state/task_data.dart';
 import 'package:i_potato_timer/presentation/home/state/task_state/task_state.dart';
 import 'package:i_potato_timer/repository/task_repository.dart';
+import 'package:i_potato_timer/utils/audio_player.dart';
 import 'package:mobx/mobx.dart';
 part 'task_store.g.dart';
 
@@ -15,6 +16,8 @@ abstract class _TaskStore with Store {
 
   @observable
   TasksState state = const TasksInitialState();
+
+  Set<int> completedTask = {};
 
   Future<void> getAllTasks() async {
     try {
@@ -46,7 +49,7 @@ abstract class _TaskStore with Store {
 
   Future<void> onUpdate(TaskData taskData) async {
     try {
-      await _taskRepository.updateTask(taskData); 
+      await _taskRepository.updateTask(taskData);
     } catch (error) {
       state = const TasksErrorState();
     }
@@ -62,15 +65,17 @@ abstract class _TaskStore with Store {
       }
       return -1;
     });
+    for (var task in tasks) {
+      if (task.completed == true) {
+        completedTask.add(task.id);
+      }
+    }
+    handleAudio();
     if (tasks.isNotEmpty) {
       state = TasksLoadedState(tasks);
     } else {
       state = const TasksInitialState();
     }
-  }
-
-  Future<TaskData> getSingleTask(int id) async {
-    return await _taskRepository.getSingleTask(id);
   }
 
   Future<void> onTimerPaused(TaskData taskData) async {
@@ -84,6 +89,8 @@ abstract class _TaskStore with Store {
   Future<void> onTaskDelete(TaskData taskData) async {
     try {
       await _taskRepository.deleteTask(taskData.id);
+      completedTask.remove(taskData.id);
+      handleAudio();
       _reloadData();
     } catch (error) {
       state = const TasksErrorState();
@@ -98,5 +105,14 @@ abstract class _TaskStore with Store {
       state = const TasksErrorState();
     }
     _reloadData();
+  }
+
+  void handleAudio(){
+    if(completedTask.isNotEmpty){
+      AppAudioPalyer.playAudio();
+    }
+    if(completedTask.isEmpty){
+      AppAudioPalyer.stopAudio();
+    }
   }
 }

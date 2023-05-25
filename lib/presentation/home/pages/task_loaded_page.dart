@@ -12,6 +12,7 @@ class TaskLoadedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return ListView.builder(
       key: Key(taskList.hashCode.toString()),
       itemCount: taskList.length,
